@@ -1,5 +1,6 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth.models import User
+from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib import auth
 # Create your views here.
 
@@ -33,3 +34,15 @@ def logout(request):
          auth.logout(request)
          return redirect('/')
     return render(request, 'signup.html')  
+
+def idcheck(request):
+    try:
+        user = User.objects.get(username=request.GET['id'])
+    except Exception as e:
+        user = None
+
+    result ={
+        'result': 'success',
+        'data' : "not exist" if user is None else "exist"
+    }
+    return JsonResponse(result)
